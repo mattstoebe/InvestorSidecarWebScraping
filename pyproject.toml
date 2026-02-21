@@ -1,0 +1,42 @@
+[project]
+name = "investor-sidecar-web-scraping"
+version = "0.1.0"
+description = "Web scraping and data persistence utilities."
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "beautifulsoup4>=4.13.3,<5.0.0",
+    "pandas>=2.2.3,<3.0.0",
+    "python-dotenv>=1.0.1,<2.0.0",
+    "requests>=2.32.3,<3.0.0",
+    "supabase>=2.11.0,<3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "coverage>=7.6.10,<8.0.0",
+    "ipykernel>=6.29.5,<7.0.0",
+    "mypy>=1.14.1,<2.0.0",
+    "notebook>=7.3.2,<8.0.0",
+    "pytest>=8.3.4,<9.0.0",
+    "ruff>=0.9.4,<1.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=69.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.coverage]
+run.omit = ["*__init__*"]
+report.exclude_lines = ["if __name__ == .__main__.:"]
+
+[tool.ruff]
+include = ["notebooks/**/*.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+line-length = 100
+
+[tool.mypy]
+files = ["notebooks/**/*.py"]
+ignore_missing_imports = true

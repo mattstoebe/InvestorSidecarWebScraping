@@ -1,0 +1,67 @@
+# Custom
+/tests/.pytest_cache/
+**/.venv/**
+**/vars.env
+*/__pycache__/*
+**/.python-version
+.mise.local.toml
+mlruns/**
+data/**
+!data/.gitkeep
+local/**
+!local/.gitkeep
+.Trash-1000/**
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Jupyter Notebooks
+**/.ipynb_checkopints
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+.cache
+coverage.xml
+*.cover
+*.py,cover
+.pytest_cache/
+cover/
+
+# Environments
+**/.env
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ruff
+.ruff_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
