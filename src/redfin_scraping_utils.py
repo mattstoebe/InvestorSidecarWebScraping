@@ -2,44 +2,19 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import json
-import os
-from dotenv import load_dotenv
-from supabase import create_client, Client
 
 class RedfinScraper:
     def __init__(self):
         self.headers = {'User-Agent': 'Mozilla/5.0'}
 
-        # Initialize Supabase client
-        load_dotenv()
-        url: str = os.getenv("SUPABASE_URL")
-        key: str = os.getenv("SUPABASE_KEY")
-        if not url or not key:
-            raise ValueError("SUPABASE_URL or SUPABASE_KEY is not set in the environment.")
-        self.supabase: Client = create_client(url, key)
-
-    def get_target_zips(self, state, zip_code=None):
-        # Query the Supabase table for zip codes
+    def get_target_zips(self, state=None, zip_code=None, zip_codes=None):
+        # Keep this scraper module focused on scraping only:
+        # callers provide zip(s) to scrape rather than pulling from a database.
         if zip_code is not None:
             return [zip_code]
-
-        query = ( 
-            self
-            .supabase
-            .schema('public')
-            .table('ref_zipcode_mapping')
-            .select('zip', 'state', 'primary_city')
-        )
-
-        if state is not None:
-            # Filter by state
-            response = query.eq('state', state).execute()
-        else:
-            # Filter by city and state
-            return [zip_code]
-        
-        zips = [item['zip'] for item in response.data]
-        return zips
+        if zip_codes:
+            return zip_codes
+        raise ValueError("Provide `zip_code` or `zip_codes` when calling scrape_state().")
 
     def get_stingray_rgn_id(self, zip_code):
         query_location_api = f"https://www.redfin.com/stingray/do/query-location?location={zip_code}&v=2"
@@ -85,14 +60,15 @@ class RedfinScraper:
         df = pd.DataFrame(parsed_data)
         return df
 
-    def scrape_state(self, state, city=None, zip_code=None, limit=None):
-        target_zips = self.get_target_zips(state, zip_code)
+    def scrape_state(self, state=None, city=None, zip_code=None, zip_codes=None, limit=None):
+        target_zips = self.get_target_zips(state=state, zip_code=zip_code, zip_codes=zip_codes)
         total_zips = len(target_zips)
         if limit:
             target_zips = target_zips[:limit]
             total_zips = len(target_zips)  # Update total_zips if limit is applied
 
-        print(f"Scraping {total_zips} Zip Codes in {state}")
+        state_label = state if state is not None else "provided zip set"
+        print(f"Scraping {total_zips} Zip Codes in {state_label}")
         progress_updates = {
             25: int(0.25 * total_zips),
             50: int(0.50 * total_zips),
